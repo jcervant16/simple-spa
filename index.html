@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="">
+    <title>Mi SPA Framework</title>
+</head>
+<body>
+    <nav>
+        <a onclick="goHome()">Inicio</a>
+        <a href="/about" onclick="event.preventDefault(); window.history.pushState({}, '', '/about');">Acerca de</a>
+    </nav>
+    <div id="router-container"></div>
+    <script type="module" src="./main.js"></script>
+</body>
+
+<script type="module">
+ 
+
+    function goHome(){
+       window.history.pushState({}, '', '/cart')
+    }
+
+    function goCart(){
+        window.history.pushState({}, '', '/home')
+    }
+</script>
+</html>
