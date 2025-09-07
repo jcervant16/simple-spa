@@ -14,13 +14,13 @@ function handleLocation() {
 
     if (route) {
         fetchPage(route.page).then(html => {
-            const contenedor = document.getElementById('router-container');
-            if (contenedor) {
-                contenedor.innerHTML = html;
+            const routerContainer = document.getElementById('router-container');
+            if (routerContainer) {
+                routerContainer.innerHTML = html;
             }
         })
             .catch(error => {
-                console.error('Error al cargar el archivo:', error);
+                console.error('Error loading page:', error);
             });
     }
 }
@@ -28,7 +28,7 @@ function handleLocation() {
 async function fetchPage(urlPath) {
     const response = await fetch(urlPath);
     if (!response.ok) {
-        throw new Error('No se pudo cargar el archivo HTML');
+        throw new Error('error to get HTML');
     }
     return await response.text();
 }

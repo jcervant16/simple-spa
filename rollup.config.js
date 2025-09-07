@@ -10,7 +10,7 @@ export default {
         {
             file: "dist/simple-js.umd.js",
             format: "umd",
-            name: "SimpleJS",     
+            name: "SimpleSPA",     
             plugins: [terser()]
         }
     ],
