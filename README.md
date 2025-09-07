@@ -12,14 +12,6 @@ Instálala con **npm**:
 npm install jsimple-spa
 ```
 
-O si prefieres usarla directamente en el navegador:
-
-```html
-<script type="module">
-  import { router, navigate } from "jsimple-spa";
-</script>
-```
-
 ---
 
 ## 📖 Modo de uso
