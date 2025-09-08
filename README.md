@@ -16,7 +16,30 @@ npm install jsimple-spa
 
 ## 📖 Modo de uso
 
-### 1. Definir rutas con `router`
+### 1. Agrega en tu archivo HTML principal la etiqueta `router-slot`
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <base href="">
+        <title>Mi SPA</title>
+    </head>
+    <body>
+        <nav>
+            <a id="nav-item-home">Inicio</a>
+            <a id="nav-item-about">Acerca de</a>
+        </nav>
+        <router-slot> </router-slot>
+        <script type="module" src="./main.js"></script>
+    </body>
+</html>
+
+```
+
+### 2. Definir rutas con `router`
 
 La función `router` recibe como parámetro un **array de objetos** con las propiedades:
 
@@ -34,7 +57,7 @@ router([
 
 ---
 
-### 2. Navegar entre páginas con `navigate`
+### 3. Navegar entre páginas con `navigate`
 
 Para cambiar de página dentro de la aplicación, usa la función `navigate` pasando la ruta deseada:
 
