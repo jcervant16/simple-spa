@@ -1,4 +1,9 @@
 let _routes = [];
+let routerContainer;
+
+document.addEventListener("DOMContentLoaded", () => {
+    routerContainer = document.querySelector('router-slot');
+});
 
 export function router(routes) {
     _routes = routes;
@@ -8,21 +13,38 @@ export function navigate(path) {
     history.pushState({}, '', path)
 }
 
+function getNotFoundPage() {
+    return _routes.find(item => item.path === '*').page;
+}
+
+function existNotFoundRoute() {
+    return Boolean(getNotFoundPage);
+}
+
 function handleLocation() {
     const path = window.location.pathname;
     const route = _routes.find(item => item.path === path);
+    if (!routerContainer) {
+        console.error("Element <router-slot> not found");
+        return;
+    }
+
+    if (!route && existNotFoundRoute()) {
+        loadPage(getNotFoundPage());
+        return;
+    }
 
     if (route) {
-        fetchPage(route.page).then(html => {
-            const routerContainer = document.getElementById('router-container');
-            if (routerContainer) {
-                routerContainer.innerHTML = html;
-            }
-        })
-            .catch(error => {
-                console.error('Error loading page:', error);
-            });
+        loadPage(route.page);
     }
+}
+
+async function loadPage(page) {
+    return fetchPage(page).catch(error => {
+        console.error('Error loading page:', error);
+    }).then(html => {
+        routerContainer.innerHTML = html;
+    });
 }
 
 async function fetchPage(urlPath) {
