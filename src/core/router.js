@@ -1,3 +1,5 @@
+import { load, unload } from "./style-manager";
+
 let _routes = [];
 let routerContainer;
 
@@ -44,6 +46,11 @@ async function loadPage(page) {
         console.error('Error loading page:', error);
     }).then(html => {
         routerContainer.innerHTML = html;
+        const linksElements = routerContainer.querySelectorAll("link");
+        linksElements.forEach(link => {
+            load(link.getAttribute("href"));
+            link.remove();
+        });
     });
 }
 
