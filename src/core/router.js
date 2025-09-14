@@ -1,6 +1,8 @@
-import { load, unload } from "./style-manager";
+import { load } from "./style-manager";
+import { assert } from "../utils/assert"
 
 let _routes = [];
+let route = { path: '', page: '', activeGuard: undefined };
 let routerContainer;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -15,17 +17,9 @@ export function navigate(path) {
     history.pushState({}, '', path)
 }
 
-function getNotFoundPage() {
-    return _routes.find(item => item.path === '*').page;
-}
-
-function existNotFoundRoute() {
-    return Boolean(getNotFoundPage);
-}
-
-function handleLocation() {
-    const path = window.location.pathname;
-    const route = _routes.find(item => item.path === path);
+async function handleLocation() {
+    path = window.location.pathname;
+    const route = getRoute(path);
     if (!routerContainer) {
         console.error("Element <router-slot> not found");
         return;
@@ -36,12 +30,23 @@ function handleLocation() {
         return;
     }
 
+    if (route.activeGuard && typeof route.activeGuard === "function") {
+        const activated = await route.activeGuard();
+        if (activated) {
+            loadPage(route.page);
+        }
+        return;
+    }
+
     if (route) {
         loadPage(route.page);
     }
 }
 
 async function loadPage(page) {
+    assert(page);
+    assert(typeof page === "string");
+
     return fetchPage(page).catch(error => {
         console.error('Error loading page:', error);
     }).then(html => {
@@ -55,11 +60,29 @@ async function loadPage(page) {
 }
 
 async function fetchPage(urlPath) {
+    assert(urlPath);
+    assert(typeof urlPath === "string");
+
     const response = await fetch(urlPath);
     if (!response.ok) {
         throw new Error('error to get HTML');
     }
     return await response.text();
+}
+
+function getRoute(path) {
+    if (path !== route.path) {
+        route = _routes.find(item => item.path === path)
+    }
+    return route;
+}
+
+function getNotFoundPage() {
+    return getRoute('*').page;
+}
+
+function existNotFoundRoute() {
+    return Boolean(getNotFoundPage());
 }
 
 
@@ -74,10 +97,10 @@ async function fetchPage(urlPath) {
     };
 
     window.addEventListener('popstate', () => {
-        handleLocation()
+        handleLocation();
     });
 
     window.addEventListener('pushstate', () => {
-        handleLocation()
+        handleLocation();
     });
 })()
