@@ -1,12 +1,13 @@
-import { load } from "./style-manager";
+import { proccesLinkTags } from "./style-manager";
 import { assert } from "../utils/assert"
 
 let _routes = [];
-let route = { path: '', page: '', activeGuard: undefined };
-let routerContainer;
+let _route = { path: '', page: '', activeGuard: undefined };
+let _previousRoute = { path: '', page: '', activeGuard: undefined };
+let _routerContainer;
 
 document.addEventListener("DOMContentLoaded", () => {
-    routerContainer = document.querySelector('router-slot');
+    _routerContainer = document.querySelector('router-slot');
 });
 
 export function router(routes) {
@@ -18,49 +19,37 @@ export function navigate(path) {
 }
 
 async function handleLocation() {
-    path = window.location.pathname;
+    const path = window.location.pathname;
     const route = getRoute(path);
-    if (!routerContainer) {
-        console.error("Element <router-slot> not found");
-        return;
-    }
 
     if (!route && existNotFoundRoute()) {
         loadPage(getNotFoundPage());
         return;
     }
 
-    if (route.activeGuard && typeof route.activeGuard === "function") {
-        const activated = await route.activeGuard();
-        if (activated) {
-            loadPage(route.page);
-        }
+    if (route.activeGuard && !await route.activeGuard()) {
         return;
     }
 
-    if (route) {
+    if (_previousRoute.path !== path) {
         loadPage(route.page);
+        _previousRoute = route;
     }
 }
 
 async function loadPage(page) {
-    assert(page);
     assert(typeof page === "string");
+    assert(_routerContainer);
 
     return fetchPage(page).catch(error => {
         console.error('Error loading page:', error);
     }).then(html => {
-        routerContainer.innerHTML = html;
-        const linksElements = routerContainer.querySelectorAll("link");
-        linksElements.forEach(link => {
-            load(link.getAttribute("href"));
-            link.remove();
-        });
+        _routerContainer.innerHTML = html;
+        proccesLinkTags(_routerContainer);
     });
 }
 
 async function fetchPage(urlPath) {
-    assert(urlPath);
     assert(typeof urlPath === "string");
 
     const response = await fetch(urlPath);
@@ -71,10 +60,10 @@ async function fetchPage(urlPath) {
 }
 
 function getRoute(path) {
-    if (path !== route.path) {
-        route = _routes.find(item => item.path === path)
+    if (path !== _route.path) {
+        _route = _routes.find(item => item.path === path)
     }
-    return route;
+    return _route;
 }
 
 function getNotFoundPage() {

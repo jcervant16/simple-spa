@@ -1,3 +1,4 @@
+import { assert } from "../utils/assert"
 let loadedStyles = new Map();
 
 
@@ -19,10 +20,21 @@ export function load(href) {
     loadedStyles.set(href, link);
 }
 
-export function unload(href) {
+function unload(href) {
     if (loadedStyles.has(href)) {
-      const link = loadedStyles.get(href);
-      link.remove();
-      loadedStyles.delete(href);
+        const link = loadedStyles.get(href);
+        link.remove();
+        loadedStyles.delete(href);
     }
+
+}
+
+export function proccesLinkTags(routerContainer) {
+    assert(routerContainer);
+
+    const linksElements = routerContainer.querySelectorAll("link");
+    linksElements.forEach(link => {
+        load(link.getAttribute("href"));
+        link.remove();
+    });
 }
