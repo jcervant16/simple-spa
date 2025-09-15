@@ -1,6 +1,6 @@
 {
   "name": "jsimple-spa",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "dist/simple-js.umd.js",
   "module": "dist/simple-js.esm.js",

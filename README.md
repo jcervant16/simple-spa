@@ -97,6 +97,30 @@ navigate("/home");
 
 ---
 
+--
+
+## 💂‍♂️ Uso del Guarda de rutas
+La propiedad `activeGuard` es una funcion que retorna un `boolean` o `promise<boolean>` que indica
+si se permite o no el acceso a la ruta solicitada.
+```js
+import { router } from "jsimple-spa";
+//funcion guarda
+function guardFn() {
+    return new Promise((resolve)=>{
+        setTimeout(() => {
+            resolve(true)
+        }, 2000);
+    })  
+}
+
+// Configuración de rutas
+router([
+  { path: "/home", page: "./home.html", activeGuard: guardFn  },
+  { path: "/about", page: "./about.html" },
+]);
+
+---
+
 ## 📄 Licencia
 Este proyecto está licenciado bajo los términos de la  
 **GNU General Public License v3.0 o posterior (LGPL-3.0-or-later)**.  
