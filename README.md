@@ -4,6 +4,11 @@
 
 ---
 
+
+☺️ Acá encontraras el repositorio con el código fuente <https://github.com/jcervant16/simple-spa>
+
+---
+
 ## 🚀 Instalación
 
 Instálala con **npm**:
@@ -97,7 +102,6 @@ navigate("/home");
 
 ---
 
---
 
 ## 💂‍♂️ Uso del Guarda de rutas
 La propiedad `activeGuard` es una funcion que retorna un `boolean` o `promise<boolean>` que indica
@@ -118,6 +122,7 @@ router([
   { path: "/home", page: "./home.html", activeGuard: guardFn  },
   { path: "/about", page: "./about.html" },
 ]);
+```
 
 ---
 
